@@ -1,6 +1,6 @@
 # niche_perfume_recommender
 <img src="https://media.giphy.com/media/okmF7jaMYifU4/giphy.gif" width=100>
-
+# The Chatbot
 Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is an entire unique, detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to use natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
 
 I created a chatbot that uses Doc2Vec and Latent Semantic Analysis to represent the perfumes in latent space, and information retrieval to recommend perfumes. I set out to overcome a challenge in document retrieval and chatbots. I wanted the recommendations to take into account both my likes <i>and</i> dislikes. If I tell the chatbot "I like roses" I did not want to see the same recommendations if I had said "I hate roses". I needed to take sentiment into account. 
@@ -9,6 +9,7 @@ Here is an example interaction with the chatbot. A simple query for a christmas 
 
 <img src="images/christmas.png" width=800>
 
+# Why is sentiment so important?
 Consider this chatbot message. <i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands."</i>
 
 <img src="images/positive_recs.png" width=800>
@@ -19,7 +20,7 @@ Notice the 4th recommended perfume has notes of coconut and tobacco. What if I h
 
 For an example, and code to run this chatbot recommender yourself, check out `run_model.ipynb`
 
-# Models
+# The Model
 So how did I do it? 
 
 The first step in the model is to identify the sentiment of each sentence from the chatbot message. I used [VADER](https://github.com/cjhutto/vaderSentiment) to do this. (It was super easy to use, and gave me great results. I highly recommend trying it out if you have a project where you'd like to use sentiment analysis.) I concatenate all positive and neutral sentences into one string, and all negative sentiment sentences into another string. I now have two documents I can use to find similar perfumes.
