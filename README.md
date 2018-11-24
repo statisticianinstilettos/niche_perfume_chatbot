@@ -1,15 +1,19 @@
 # niche_perfume_recommender
+<img src="https://media.giphy.com/media/okmF7jaMYifU4/giphy.gif" width=100>
+
 Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is an entire unique, detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to used natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
 
 I created a chatbot that uses natural language processing methods (Doc2Vec and LSA) and information retrieval to recommend perfumes. I set out to overcome a challenge in document retrieval and chatbots. I wanted the recommendations to take into account both my likes <i>and</i> dislikes. If I tell the chatbot "I like roses" I did not want to see the recommendations if I had said "I hate roses". I needed to take sentiment into account. 
 
-<img src="https://media.giphy.com/media/okmF7jaMYifU4/giphy.gif" width=200>
+Here is are some example interaction with the chatbot. A simple query for roses returns rose perfumes. The beauty of the language of perfume is you could describe how you want to feel when wearing it, or where you want to wear it, or even your personality or a poem, and the model will be able to return a perfume that will envoke those images. The first perfume for this request for a christmas scent has the very on-topic note of myrrh. 
 
-<i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands."</i>
+<img src="images/christmas.png" alt="Long Tail Plot" width=800>
+
+Consider this chatbot message. <i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands."</i>
 
 <img src="images/positive_recs.png" alt="Long Tail Plot" width=800>
 
-Notice there the 4th recommended perfume has notes of coconut and tobacco. What if I hate those notes? I updated my query to include this information, and got an updated list of recommendations. <i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands. I don't like tobacco, or coconut."</i>
+Notice the 4th recommended perfume has notes of coconut and tobacco. What if I hate those notes? I updated my query to include this information, and got an updated list of recommendations. <i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands. I don't like tobacco, or coconut."</i>
 
 <img src="images/negative_recs.png" alt="Long Tail Plot" width=800>
 
