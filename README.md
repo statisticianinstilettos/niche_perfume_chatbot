@@ -21,6 +21,8 @@ Notice the 4th recommended perfume has notes of coconut and tobacco. What if I h
 
 <img src="images/negative_recs.png" width=800>
 
+The 4th perfume disappears from the recommendations!
+
 # The Model
 So how did I do it? 
 
