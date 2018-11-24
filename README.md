@@ -2,6 +2,8 @@
 
 Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is a whole subculture that comes with its own detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to use natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
 
+For code to run this chatbot recommender yourself, clone this repo and check out `run_model.ipynb`
+
 # The Chatbot
 
 I created a chatbot that uses Doc2Vec and Latent Semantic Analysis to represent the perfumes in latent space, and information retrieval to recommend perfumes. I set out to overcome a challenge in document retrieval and chatbots. I wanted the recommendations to take into account both my likes <i>and</i> dislikes. If I tell the chatbot "I like roses" I did not want to see the same recommendations if I had said "I hate roses". I needed to take sentiment into account. 
@@ -18,8 +20,6 @@ Consider this chatbot message. <i>"I like peaches and pears. Boozy vanilla sweet
 Notice the 4th recommended perfume has notes of coconut and tobacco. What if I hate those notes? I updated my query to include this information, and got an updated list of recommendations. <i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands. I don't like tobacco, or coconut."</i>
 
 <img src="images/negative_recs.png" width=800>
-
-For an example, and code to run this chatbot recommender yourself, check out `run_model.ipynb`
 
 # The Model
 So how did I do it? 
