@@ -1,7 +1,7 @@
 # niche_perfume_recommender
 <img src="https://media.giphy.com/media/okmF7jaMYifU4/giphy.gif" width=100>
 
-Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is an entire unique, detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to used natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
+Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is an entire unique, detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to use natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
 
 I created a chatbot that uses natural language processing methods (Doc2Vec and LSA) and information retrieval to recommend perfumes. I set out to overcome a challenge in document retrieval and chatbots. I wanted the recommendations to take into account both my likes <i>and</i> dislikes. If I tell the chatbot "I like roses" I did not want to see the recommendations if I had said "I hate roses". I needed to take sentiment into account. 
 
