@@ -32,9 +32,7 @@ The perfumes have text descriptions, reviews, and a list of notes. The model con
 
 To calculate cosine similarity between the chatbot message perfume documents, I find two similarity scores using both LSA and Doc2Vec. I then averaged the both scores to come up with a new similarity score. 
 
-LSA is a Bag of Words approach, meaning that the context and semantics of the words used are not taken into account. The words used are simple tokenized with TF-IDF, and then compressed with SVD. 
+LSA is a Bag of Words approach, meaning that the order (context) of the words used are not taken into account. The words used are simple tokenized with TF-IDF, and then compressed with SVD. 
 
 Doc2Vec considers semantics and word order. The context of the document and relationships between words are preserved in the embedding. 
-
-I used both LSA and Dov2Vec embeddings for this project because I wanted to consider the semantics and word orders, but Doc2Vec by itself did not always return the most relevant results. Therefore, it still made sense to match tokenized words directly. For example, a fruity perfume with `apple` notes could have a very similar Doc2Vec vector as a fruity perfume with `peach` notes because the semantics and context of `apples` and `peaches` are very similar in my corpus. The LSA embeddings helps refine the results to surface the peach perfume if you asked for peach notes in the chatbot message.
 
