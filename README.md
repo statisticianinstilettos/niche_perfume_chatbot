@@ -12,6 +12,16 @@ Here is an example interaction with the chatbot. A simple query for a christmas 
 
 <img src="images/christmas.png" width=800>
 
+Here are a few more fun examples:
+
+
+The query <i>"Looking for my signature beach scent. I plan to wear it to the beach or pool"<\i> returns perfumes with notes of seasalt, coconut, and seaweed. 
+<img src="images/beach.png" width=800>
+
+The query <i>"I'm looking for a perfume for a vacation in Italy to a small Italian island."<\i> returns perfumes with sicilian orange and lemon, and a perfume from a perfume house Carthusia called capri. 
+<img src="images/italy.png" width=800>
+
+
 # Why is sentiment so important?
 Consider this chatbot message. <i>"I like peaches and pears. Boozy vanilla sweet smelling gourmands."</i>
 
