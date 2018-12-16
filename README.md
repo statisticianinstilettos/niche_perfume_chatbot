@@ -15,7 +15,8 @@ Here is an example interaction with the chatbot. A simple query for a christmas 
 Here are a few more fun examples:
 
 
-The query <i>"Looking for my signature beach scent. I plan to wear it to the beach or pool"</i> returns perfumes with notes of seasalt, coconut, and seaweed. 
+The query <i>"Looking for my signature beach scent. I plan to wear it to the beach or pool"</i> returns perfumes with notes of seasalt, coconut, and seaweed. My own beach scent, Eau de Soleil Blanc by Tom Ford, appears second on the list! I can attest that this perfume does smell like a day at the beach on a tropical vacation!
+
 <img src="images/beach.png" width=800>
 
 The query <i>"I'm looking for a perfume for a vacation in Italy to a small Italian island."</i> returns perfumes with sicilian orange and lemon, and a perfume from a perfume house Carthusia called capri. 
