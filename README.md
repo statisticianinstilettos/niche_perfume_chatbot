@@ -1,6 +1,6 @@
 # niche_perfume_recommender
 
-Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is a whole subculture that comes with its own detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to use natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
+Niche perfumes are defined as rare perfumes created by small, boutique perfume houses. Much like wine, there is a whole subculture surounding niche perfumes that comes with its own detailed and poetic vocabulary used to describe these highly specialized perfumes. As a perfume lover and a data scientist, the unusual and highly descriptive language used in the niche perfume community inspired me to use natural language processing to create a chatbot to help me discover perfumes I might want to purchase myself.
 
 For code to run this chatbot recommender yourself, clone this repo and check out `run_model.ipynb`
 
