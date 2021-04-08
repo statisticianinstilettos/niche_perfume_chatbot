@@ -1,8 +1,8 @@
-pandas
-numpy
-nltk
+pandas==0.23.4
+numpy==1.15.1
+nltk==3.4
 scikit-learn==0.20.0
 scipy
-gensim
+gensim==3.8.3
 scikit_image
 ipywidgets
