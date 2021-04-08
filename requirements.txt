@@ -1,6 +1,6 @@
 pandas==0.23.4
 numpy==1.15.1
-nltk==3.4
+nltk==3.4.5
 scikit-learn==0.20.0
 scipy
 gensim==3.8.3
