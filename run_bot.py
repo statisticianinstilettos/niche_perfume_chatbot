@@ -4,6 +4,8 @@ from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv, find_dotenv
 from src.information_retrieval_model import Perfume_Information_Retrieval_Model
+import pandas as pd 
+import emoji
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -14,6 +16,7 @@ AIRTABLE_API_KEY = os.environ['AIRTABLE_API_KEY']
 
 # Load ML model 
 model = Perfume_Information_Retrieval_Model()
+df = pd.read_pickle("data/perfume_data.pkl")
 
 
 @app.route('/send-survey', methods=['POST'])
@@ -43,24 +46,44 @@ def send_survey():
       #update airtable
       session[sender_phone_number]['Number'] = twilio_phone_number
       #make response
-      sms_message = "Hi! I'm a chatbot programmed to help you find your perfect signature perfume! To get started, just respond with a description of what you are looking for. Be as detailed as you want!"
+      sms_message =  emoji.emojize("Hi! :wave:")
+      sms_message = sms_message + "I'm a chatbot programmed to help you find your perfect signature perfume! To get started, just respond with a description of what you are looking for. Be as detailed as you want!"
       msg.body(sms_message)
        
     elif sms_count == 1:
       #update airtable 
       session[sender_phone_number]['Score'] = request_body
 
-      #Get recs from ML
-      recs = model.query_similar_perfumes(request_body, 1)
-      perfume_name = recs.index[0]
+      #Get recs from ML model
+      recs = model.query_similar_perfumes(request_body, 3)
+      
+      #format recommendation 1
+      perfume_name = recs.index.tolist()[0]
       perfume_score = round(recs.iloc[0].ensemble_similarity,4)
-      #perfume_image = 
-      #perfume_link = 
+      perfume_notes = df.query('title==@perfume_name').notes.values[0]
+      perfume_image = df.query('title==@perfume_name').image_url.values[0]
+      shopping_link = "https://www.google.com/search?q=" + perfume_name.replace(" ", "+")
+      sms_message = emoji.emojize("Great! Here are your top recommendation. :cherry_blossom: {} (match score={}). It was recommended because it has notes of {}. Shop for it here {}. \n ".format(perfume_name, perfume_score, perfume_notes, shopping_link))
+      msg.media(perfume_image)  
 
-      sms_message = "Great! Here are your top recommendation. {}. Match score = {}".format(perfume_name, perfume_score)
+      #format recommendation 2
+      perfume_name = recs.index.tolist()[1]
+      perfume_score = round(recs.iloc[1].ensemble_similarity,4)
+      perfume_notes = df.query('title==@perfume_name').notes.values[0]
+      perfume_image = df.query('title==@perfume_name').image_url.values[0]
+      shopping_link = "https://www.google.com/search?q=" + perfume_name.replace(" ", "+")
+      sms_message = sms_message + emoji.emojize("You can also try :mushroom: {} (match score={}). Notes are {}. Shop it here {}. \n".format(perfume_name, perfume_score, perfume_notes, shopping_link))
+     
+      #format recommendation 3
+      perfume_name = recs.index.tolist()[2]
+      perfume_score = round(recs.iloc[2].ensemble_similarity,4)
+      perfume_notes = df.query('title==@perfume_name').notes.values[0]
+      perfume_image = df.query('title==@perfume_name').image_url.values[0]
+      shopping_link = "https://www.google.com/search?q=" + perfume_name.replace(" ", "+")
+      sms_message = sms_message + emoji.emojize(" Or try :bouquet: {} (match score={}). Notes are {}. Shop it here {}. Enjoy!".format(perfume_name, perfume_score, perfume_notes, shopping_link))
+      sms_message = sms_message + emoji.emojize(":red_heart:")
       msg.body(sms_message)
-      msg.media("https://static.luckyscent.com/images/products/511056.jpg?width=400&404=product.png")  
-
+      
       #update airtable with predictions and scores
       session[sender_phone_number]['Reason'] = request_body
 
