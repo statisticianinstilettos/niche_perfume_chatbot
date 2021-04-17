@@ -3,6 +3,7 @@ from airtable import Airtable
 from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv, find_dotenv
+from src.information_retrieval_model import Perfume_Information_Retrieval_Model
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -11,48 +12,68 @@ app.secret_key = "super secret key"
 AIRTABLE_BASE_ID = os.environ['AIRTABLE_BASE_ID']
 AIRTABLE_API_KEY = os.environ['AIRTABLE_API_KEY']
 
+# Load ML model 
+model = Perfume_Information_Retrieval_Model()
+
 
 @app.route('/send-survey', methods=['POST'])
 def send_survey():
    airtable = Airtable(base_key=AIRTABLE_BASE_ID, table_name='Input', api_key=AIRTABLE_API_KEY)
-   incoming_msg = request.values.get('Body', 'message error').lower()
+   request_body = request.values.get('Body', 'message error').lower()
    sender_phone_number = request.values.get('From', 'unknown_sender')
    twilio_phone_number = request.values.get('To', 'unknown_number')
 
    # reset session
-   if 'reset' in incoming_msg:
+   if 'reset' in request_body:
        del session['sms_count']
        session.pop(sender_phone_number, None)
        return("resetting the session")
       
-   if not 'sms_count' in session:
+   if not 'sms_count' in session:  
        session['sms_count'] = 0
        session[sender_phone_number] = {}
-      
+
+   #craft your response
    sms_count = session['sms_count']
    resp = MessagingResponse()
    msg = resp.message()
 
    if sms_count >= 0 and sms_count <= 2:
     if sms_count == 0:
+      #update airtable
       session[sender_phone_number]['Number'] = twilio_phone_number
+      #make response
       sms_message = "Hi! I'm a chatbot programmed to help you find your perfect signature perfume! To get started, just respond with a description of what you are looking for. Be as detailed as you want!"
       msg.body(sms_message)
        
     elif sms_count == 1:
-      session[sender_phone_number]['Score'] = incoming_msg
-      sms_message = "Great! Here are your top 5 recommendations...."
+      #update airtable 
+      session[sender_phone_number]['Score'] = request_body
+
+      #Get recs from ML
+      recs = model.query_similar_perfumes(request_body, 1)
+      perfume_name = recs.index[0]
+      perfume_score = round(recs.iloc[0].ensemble_similarity,4)
+      #perfume_image = 
+      #perfume_link = 
+
+      sms_message = "Great! Here are your top recommendation. {}. Match score = {}".format(perfume_name, perfume_score)
       msg.body(sms_message)
+      msg.media("https://static.luckyscent.com/images/products/511056.jpg?width=400&404=product.png")  
+
+      #update airtable with predictions and scores
+      session[sender_phone_number]['Reason'] = request_body
+
       
     elif sms_count == 2:
-      session[sender_phone_number]['Reason'] = incoming_msg
+      session[sender_phone_number]['Reason'] = request_body
       sms_message = "Thanks and enjoy your new perfume! If you want new recommendations, just type 'Reset' to start over."
       msg.body(sms_message)
       
     session['sms_count'] += 1
 
    else:
-    if resp == "More":
+    if request_body == "more":
       sms_message = "Great! I love talking about my code! I use a Machine Learning model that scans tons of perfumes online to find your personalized recommendations. Read more about the model in this article. https://towardsdatascience.com/perfume-recommendations-using-natural-language-processing-ad3e6736074c"
       msg.body(sms_message)
     else:
@@ -86,3 +107,4 @@ def get_scores():
 
 if __name__ == "__main__":
     app.run(debug=True)
+

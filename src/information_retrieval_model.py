@@ -4,8 +4,8 @@ import pickle
 from textwrap import wrap
 import re
 
-import matplotlib.pyplot as plt
-from skimage import io
+#import matplotlib.pyplot as plt
+#from skimage import io
 
 import nltk
 nltk.download('vader_lexicon')
