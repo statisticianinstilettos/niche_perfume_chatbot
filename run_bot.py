@@ -19,8 +19,8 @@ model = Perfume_Information_Retrieval_Model()
 df = pd.read_pickle("data/perfume_data.pkl")
 
 
-@app.route('/send-survey', methods=['POST'])
-def send_survey():
+@app.route('/run-bot', methods=['POST'])
+def run_bot():
    airtable = Airtable(base_key=AIRTABLE_BASE_ID, table_name='Input', api_key=AIRTABLE_API_KEY)
    request_body = request.values.get('Body', 'message error').lower()
    sender_phone_number = request.values.get('From', 'unknown_sender')
@@ -44,15 +44,14 @@ def send_survey():
    if sms_count >= 0 and sms_count <= 2:
     if sms_count == 0:
       #update airtable
-      session[sender_phone_number]['Number'] = twilio_phone_number
-      #make response
-      sms_message =  emoji.emojize("Hi! :wave:")
-      sms_message = sms_message + "I'm a chatbot programmed to help you find your perfect signature perfume! To get started, just respond with a description of what you are looking for. Be as detailed as you want!"
+      session[sender_phone_number]['Number'] = sender_phone_number
+      #make responses
+      sms_message = "Hi there! I'm a chatbot programmed to help you find your perfect signature perfume! To get started, just respond with a description of what you are looking for. Be as detailed as you want!"
       msg.body(sms_message)
        
     elif sms_count == 1:
       #update airtable 
-      session[sender_phone_number]['Score'] = request_body
+      session[sender_phone_number]['Query'] = request_body
 
       #Get recs from ML model
       recs = model.query_similar_perfumes(request_body, 3)
@@ -85,11 +84,11 @@ def send_survey():
       msg.body(sms_message)
       
       #update airtable with predictions and scores
-      session[sender_phone_number]['Reason'] = request_body
+      session[sender_phone_number]['Predictions'] = sms_message
+      airtable.insert(session[sender_phone_number])
 
       
     elif sms_count == 2:
-      session[sender_phone_number]['Reason'] = request_body
       sms_message = "Thanks and enjoy your new perfume! If you want new recommendations, just type 'Reset' to start over."
       msg.body(sms_message)
       
@@ -107,26 +106,6 @@ def send_survey():
    return str(resp)
 
 
-
-
-
-@app.route('/get-scores', methods=['GET'])
-def get_scores():
-   phone_number = str(request.args.get('number'))
-
-   airtable = Airtable(base_key=AIRTABLE_BASE_ID, table_name='Input', api_key=AIRTABLE_API_KEY)
-   airtable_data_dict = {}
-   score_list = []
-
-   for page in airtable.get_iter(view='nps', filterByFormula="({Number}=" + phone_number + ")"):
-       for record in page:
-           num_id = record['fields']['ID']
-           airtable_data_dict[num_id] = {}
-           airtable_data_dict[num_id]['score'] = record['fields']['Score']
-           airtable_data_dict[num_id]['reason'] = record['fields']['Reason']
-           airtable_data_dict[num_id]['comments'] = record['fields']['Comments']
-
-   return {'overallNPS': nps_total_score, 'airtableData': airtable_data_dict}
 
 if __name__ == "__main__":
     app.run(debug=True)
