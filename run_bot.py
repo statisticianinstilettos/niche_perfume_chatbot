@@ -23,7 +23,7 @@ df = pd.read_pickle("data/perfume_data.pkl")
 def run_bot():
    airtable = Airtable(base_key=AIRTABLE_BASE_ID, table_name='Input', api_key=AIRTABLE_API_KEY)
    request_body = request.values.get('Body', 'message error').lower()
-   sender_phone_number = request.values.get('From', 'unknown_sender')
+   sender_phone_number = str(hash(request.values.get('From', 'unknown_sender')))
    twilio_phone_number = request.values.get('To', 'unknown_number')
 
    # reset session
@@ -31,7 +31,7 @@ def run_bot():
        del session['sms_count']
        session.pop(sender_phone_number, None)
        return("resetting the session")
-      
+    
    if not 'sms_count' in session:  
        session['sms_count'] = 0
        session[sender_phone_number] = {}
@@ -41,7 +41,7 @@ def run_bot():
    resp = MessagingResponse()
    msg = resp.message()
 
-   if sms_count >= 0 and sms_count <= 2:
+   if sms_count >= 0 and sms_count <= 1:
     if sms_count == 0:
       #update airtable
       session[sender_phone_number]['Number'] = sender_phone_number
@@ -81,21 +81,17 @@ def run_bot():
       shopping_link = "https://www.google.com/search?q=" + perfume_name.replace(" ", "+")
       sms_message = sms_message + emoji.emojize(" Or try :bouquet: {} (match score={}). Notes are {}. Shop it here {}. Enjoy!".format(perfume_name, perfume_score, perfume_notes, shopping_link))
       sms_message = sms_message + emoji.emojize(":red_heart:")
+      sms_message = sms_message + "Thanks and enjoy your new perfume! If you want new recommendations, just type 'Reset' to start over."
       msg.body(sms_message)
       
       #update airtable with predictions and scores
       session[sender_phone_number]['Predictions'] = sms_message
       airtable.insert(session[sender_phone_number])
-
-      
-    elif sms_count == 2:
-      sms_message = "Thanks and enjoy your new perfume! If you want new recommendations, just type 'Reset' to start over."
-      msg.body(sms_message)
       
     session['sms_count'] += 1
 
    else:
-    if request_body == "more":
+    if 'more' in request_body:
       sms_message = "Great! I love talking about my code! I use a Machine Learning model that scans tons of perfumes online to find your personalized recommendations. Read more about the model in this article. https://towardsdatascience.com/perfume-recommendations-using-natural-language-processing-ad3e6736074c"
       msg.body(sms_message)
     else:
@@ -108,5 +104,5 @@ def run_bot():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=80)
+    app.run(debug=True, host='0.0.0.0')
 
